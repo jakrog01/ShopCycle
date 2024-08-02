@@ -11,8 +11,35 @@ class AuthorizationScreen extends StatefulWidget {
 }
 
 class _AutohrizationScreenState extends State<AuthorizationScreen> {
+  final _form = GlobalKey<FormState>();
+
   var _isLogin = true;
   var _acceptTerms = false;
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+
+  void _submit() {
+    final formsValidation = _form.currentState!.validate();
+    var termsValidation = false;
+
+    if (!_isLogin && _acceptTerms) {
+      termsValidation = true;
+    }
+
+    if (formsValidation && termsValidation) {
+      _form.currentState!.save();
+      print(_enteredEmail);
+      print(_enteredPassword);
+    }
+  }
+
+  bool specialSignsValidator(String value) {
+    RegExp regex = RegExp(r'[!@#\$&*~]');
+    if (!regex.hasMatch(value)) {
+      return true;
+    }
+    return false;
+  }
 
   Widget TermsCheckBox() {
     if (_isLogin) {
@@ -69,6 +96,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                       padding: const EdgeInsets.all(16),
                       child: SingleChildScrollView(
                         child: Form(
+                            key: _form,
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -79,12 +107,40 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 autocorrect: false,
                                 textCapitalization: TextCapitalization.none,
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.trim().isEmpty ||
+                                      !value.contains('@') ||
+                                      !value.contains('.') ||
+                                      value.length < 6){
+                                    return 'Please enter a valid email address';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (newValue) {
+                                  _enteredEmail = newValue!;
+                                },
                               ),
                               TextFormField(
                                 decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.lock_rounded),
                                     labelText: 'Password'),
                                 obscureText: true,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return "Please enter a password";
+                                  } else if (value.trim().length < 6) {
+                                    return "Password too short, min 6 characters";
+                                  } else if (value.trim().length > 25) {
+                                    return "Password too long, max 25 characters";
+                                  } else if (specialSignsValidator(value)) {
+                                    return "The password must have one special character";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (newValue) {
+                                  _enteredPassword = newValue!;
+                                },
                               ),
                               TermsCheckBox(),
                               const SizedBox(
@@ -110,7 +166,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                                           backgroundColor: Theme.of(context)
                                               .colorScheme
                                               .primaryContainer),
-                                      onPressed: () {},
+                                      onPressed: _submit,
                                       child: Text(
                                           _isLogin ? "Sign in" : "Sign up")),
                                 ],
