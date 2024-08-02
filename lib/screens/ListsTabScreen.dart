@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopcycle/screens/ShoppingListScreen.dart';
 import 'package:shopcycle/widgets/main_drawer.dart';
 import 'package:shopcycle/screens/SavedShoppingListScreen.dart';
 
@@ -22,14 +23,14 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = const Savedshoppinglistscreen();
+    Widget activePage = const SavedShoppingListsScreen();
     var _screenTitle = "Saved Shopping Lists";
 
     if (_selectedPageIndex == 1) {
       setState(() {
         _screenTitle = "Shopping List ";
+        activePage = const ShoppingListScreen();
       });
-      ;
     }
 
     return Scaffold(
@@ -38,12 +39,13 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
         title: Text(_screenTitle),
       ),
       drawer: const MainDrawer(),
-      body: const Savedshoppinglistscreen(),
+      body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedPageIndex,
         backgroundColor: Theme.of(context).colorScheme.surface,
         selectedItemColor: Theme.of(context).colorScheme.onSurface,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
         onTap: _selectPage,
         items: [
           BottomNavigationBarItem(

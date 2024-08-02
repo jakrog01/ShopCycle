@@ -37,41 +37,48 @@ class MainDrawer extends StatelessWidget {
                   )
                 ],
               )),
-              ListTile(
-                leading: Icon(Icons.list, color: Theme.of(context).colorScheme.onSurface),
-                title: Text("My lists", style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 20), 
-                         ),
-                onTap: (){
-                  return;
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.settings, color: Theme.of(context).colorScheme.onSurface),
-                title: Text("Settings", style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 20), 
-                         ),
-                onTap: (){
-                  return;
-                },
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: ListTile(
-                    leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.onSurface),
-                    title: Text("Log out", style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 20), 
-                             ),
-                    onTap: (){
-                      FirebaseAuth.instance.signOut();
-                    },
-                  ),
+          ListTile(
+            leading: Icon(Icons.list,
+                color: Theme.of(context).colorScheme.onSurface),
+            title: Text(
+              "My lists",
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface, fontSize: 20),
+            ),
+            onTap: () {
+              return;
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings,
+                color: Theme.of(context).colorScheme.onSurface),
+            title: Text(
+              "Settings",
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface, fontSize: 20),
+            ),
+            onTap: () {
+              return;
+            },
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: ListTile(
+                leading: Icon(Icons.logout,
+                    color: Theme.of(context).colorScheme.onSurface),
+                title: Text(
+                  "Log out",
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 20),
                 ),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                },
               ),
+            ),
+          ),
         ],
       ),
     );
