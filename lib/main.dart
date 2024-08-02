@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shopcycle/screens/ListsTabScreen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:shopcycle/screens/SavedShoppingListScreen.dart';
 import 'screens/AuthorizationScreen.dart';
 import 'package:shopcycle/screens/LoadingScreen.dart';
 
@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
             return const LoadingScreen();
           }
           if (snapshot.hasData){
-            return const Savedshoppinglistscreen();
+            return const ListsTabScreen();
           }
           return const AuthorizationScreen();
         }

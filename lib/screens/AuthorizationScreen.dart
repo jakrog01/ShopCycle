@@ -63,7 +63,9 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
         ),
       )));
     }
-    _communicationWithFireBase = false;
+    setState(() {
+      _communicationWithFireBase = false;
+    });
   }
 
   bool specialSignsValidator(String value) {
