@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "192503978580",
+    "project_id": "shopcycle-3d0c3",
+    "storage_bucket": "shopcycle-3d0c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192503978580:android:09cb4f386b3eff2b0b6bc1",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlemUpbdZ5joFu3oNkQhCYRkPWiEZ5ZJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192503978580:android:af1cfa83ed8bc7410b6bc1",
+        "android_client_info": {
+          "package_name": "com.example.shopcycle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlemUpbdZ5joFu3oNkQhCYRkPWiEZ5ZJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
