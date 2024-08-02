@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'screens/AuthorizationScreen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shopcycle/screens/SavedShoppingListScreen.dart';
+import 'screens/AuthorizationScreen.dart';
+import 'package:shopcycle/screens/LoadingScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +26,19 @@ class MainApp extends StatelessWidget {
       colorScheme: kAppTheme
       ),
       title: "Shop Cycle",
-      home: const AuthorizationScreen(),
-        );
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (ctx, snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting)
+          {
+            return const LoadingScreen();
+          }
+          if (snapshot.hasData){
+            return const Savedshoppinglistscreen();
+          }
+          return const AuthorizationScreen();
+        }
+      )
+      );
   }
 }

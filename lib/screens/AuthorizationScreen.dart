@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class AuthorizationScreen extends StatefulWidget {
   const AuthorizationScreen({super.key});
@@ -12,13 +15,13 @@ class AuthorizationScreen extends StatefulWidget {
 
 class _AutohrizationScreenState extends State<AuthorizationScreen> {
   final _form = GlobalKey<FormState>();
-
+  var _communicationWithFireBase = false;
   var _isLogin = true;
   var _acceptTerms = false;
   var _enteredEmail = '';
   var _enteredPassword = '';
 
-  void _submit() {
+  void _submit() async {
     final formsValidation = _form.currentState!.validate();
     var termsValidation = false;
 
@@ -26,11 +29,41 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       termsValidation = true;
     }
 
-    if (formsValidation && termsValidation) {
-      _form.currentState!.save();
-      print(_enteredEmail);
-      print(_enteredPassword);
+    if (!(formsValidation && termsValidation)) {
+      return;
     }
+
+    setState(() {
+      _communicationWithFireBase = true;
+    });
+
+    _form.currentState!.save();
+    try {
+      if (_isLogin) {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+      } else {
+        final userCredentials = await _firebase.createUserWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+      }
+    } on FirebaseAuthException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(
+        child: Row(
+          children: [
+            const Icon(Icons.warning),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+                child: Text(error.message ?? 'Authentication failed',
+                    overflow: TextOverflow.clip))
+          ],
+        ),
+      )));
+    }
+    _communicationWithFireBase = false;
   }
 
   bool specialSignsValidator(String value) {
@@ -100,78 +133,103 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.mail),
-                                    labelText: 'Email Address'),
-                                keyboardType: TextInputType.emailAddress,
-                                autocorrect: false,
-                                textCapitalization: TextCapitalization.none,
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.trim().isEmpty ||
-                                      !value.contains('@') ||
-                                      !value.contains('.') ||
-                                      value.length < 6){
-                                    return 'Please enter a valid email address';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) {
-                                  _enteredEmail = newValue!;
-                                },
-                              ),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.lock_rounded),
-                                    labelText: 'Password'),
-                                obscureText: true,
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return "Please enter a password";
-                                  } else if (value.trim().length < 6) {
-                                    return "Password too short, min 6 characters";
-                                  } else if (value.trim().length > 25) {
-                                    return "Password too long, max 25 characters";
-                                  } else if (specialSignsValidator(value)) {
-                                    return "The password must have one special character";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) {
-                                  _enteredPassword = newValue!;
-                                },
-                              ),
-                              TermsCheckBox(),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _isLogin = !_isLogin;
-                                        });
-                                      },
-                                      child: Text(_isLogin
-                                          ? 'Create an acconut'
-                                          : "I already have an account")),
-                                  const SizedBox(
-                                    width: 7,
+                                  TextFormField(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                    decoration: const InputDecoration(
+                                        prefixIcon: Icon(Icons.mail),
+                                        labelText: 'Email Address'),
+                                    keyboardType: TextInputType.emailAddress,
+                                    autocorrect: false,
+                                    textCapitalization: TextCapitalization.none,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty ||
+                                          !value.contains('@') ||
+                                          !value.contains('.') ||
+                                          value.length < 6) {
+                                        return 'Please enter a valid email address';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (newValue) {
+                                      _enteredEmail = newValue!;
+                                    },
                                   ),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Theme.of(context)
-                                              .colorScheme
-                                              .primaryContainer),
-                                      onPressed: _submit,
-                                      child: Text(
-                                          _isLogin ? "Sign in" : "Sign up")),
-                                ],
-                              ),
-                            ])),
+                                  TextFormField(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                    decoration: const InputDecoration(
+                                        prefixIcon: Icon(Icons.lock_rounded),
+                                        labelText: 'Password'),
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null ||
+                                          value.trim().isEmpty) {
+                                        return "Please enter a password";
+                                      } else if (value.trim().length < 6) {
+                                        return "Password too short, min 6 characters";
+                                      } else if (value.trim().length > 25) {
+                                        return "Password too long, max 25 characters";
+                                      } else if (specialSignsValidator(value)) {
+                                        return "The password must have one special character";
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (newValue) {
+                                      _enteredPassword = newValue!;
+                                    },
+                                  ),
+                                  TermsCheckBox(),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _isLogin = !_isLogin;
+                                            });
+                                          },
+                                          child: Text(_isLogin
+                                              ? 'Create an acconut'
+                                              : "I already have an account")),
+                                      const SizedBox(
+                                        width: 7,
+                                      ),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primaryContainer),
+                                          onPressed: _communicationWithFireBase
+                                              ? null
+                                              : _submit,
+                                          child: _communicationWithFireBase
+                                              ? const SizedBox(
+                                                  height: 16,
+                                                  width: 16,
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                )
+                                              : Text(_isLogin
+                                                  ? "Sign in"
+                                                  : "Sign up")),
+                                    ],
+                                  ),
+                                ])),
                       ),
                     ))
               ],
