@@ -28,6 +28,9 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
     if (!_isLogin && _acceptTerms) {
       termsValidation = true;
     }
+    else if(_isLogin){
+      termsValidation = true;
+    }
 
     if (!(formsValidation && termsValidation)) {
       return;
@@ -42,10 +45,10 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       if (_isLogin) {
         final userCredentials = await _firebase.signInWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
-            return;
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
+            userCredentials.user?.sendEmailVerification();
         return;
       }
     } on FirebaseAuthException catch (error) {

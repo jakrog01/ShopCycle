@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shopcycle/screens/EmailVerificationScreen.dart';
 import 'package:shopcycle/screens/ListsTabScreen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,12 +28,15 @@ class MainApp extends StatelessWidget {
         theme: ThemeData().copyWith(colorScheme: kAppTheme),
         title: "Shop Cycle",
         home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
+            stream: FirebaseAuth.instance.userChanges(),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const LoadingScreen();
               }
-              if (snapshot.hasData) {
+              else if (snapshot.hasData && !snapshot.data!.emailVerified) {
+                return const EmailVerificationScreen();
+              }
+              else if (snapshot.hasData && snapshot.data!.emailVerified) {
                 return const ListsTabScreen();
               }
               return const AuthorizationScreen();
