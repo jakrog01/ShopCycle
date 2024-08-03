@@ -1,62 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:shopcycle/models/Category/list_item_category.dart';
+import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/product_category.dart';
 
 const productsCategories = {
-  ListItemCategory.fruits : ProductCategory(
+  ListProductCategory.fruits : ProductCategory(
     title: "Fruits", 
     color: Color.fromARGB(255, 202, 205, 35)
     ),
-  ListItemCategory.vegetables : ProductCategory(
+  ListProductCategory.vegetables : ProductCategory(
     title: "Vegetables", 
     color: Color.fromARGB(255, 4, 151, 9)
     ),
-  ListItemCategory.meat : ProductCategory(
+  ListProductCategory.meat : ProductCategory(
     title: "Meat", 
     color: Color.fromARGB(255, 210, 18, 18)
     ),
-  ListItemCategory.deli : ProductCategory(
+  ListProductCategory.deli : ProductCategory(
     title: "Deli", 
     color: Color.fromARGB(255, 210, 18, 165)
     ),
-  ListItemCategory.dairy : ProductCategory(
+  ListProductCategory.dairy : ProductCategory(
     title: "Dairy", 
     color: Color.fromARGB(255, 255, 255, 255)
     ),
-  ListItemCategory.snacks : ProductCategory(
+  ListProductCategory.snacks : ProductCategory(
     title: "Snacks", 
     color: Color.fromARGB(255, 18, 210, 191)
     ),
-  ListItemCategory.bakery : ProductCategory(
+  ListProductCategory.bakery : ProductCategory(
     title: "Bakery", 
     color: Color.fromARGB(255, 226, 177, 120)
     ),
-  ListItemCategory.baking : ProductCategory(
+  ListProductCategory.baking : ProductCategory(
     title: "Baking", 
     color: Color.fromARGB(255, 238, 103, 155)
     ),
-  ListItemCategory.frozen : ProductCategory(
+  ListProductCategory.frozen : ProductCategory(
     title: "Frozen", 
     color: Color.fromARGB(255, 4, 192, 255)
     ),
-  ListItemCategory.personalCare : ProductCategory(
+  ListProductCategory.personalCare : ProductCategory(
     title: "Personal care", 
     color: Color.fromARGB(255, 174, 27, 200)
     ),
-  ListItemCategory.healthCare : ProductCategory(
+  ListProductCategory.healthCare : ProductCategory(
     title: "Health care", 
     color: Color.fromARGB(255, 209, 111, 19)
     ),
-  ListItemCategory.spices : ProductCategory(
-    title: "Health care", 
+  ListProductCategory.spices : ProductCategory(
+    title: "Spices", 
     color: Color.fromARGB(255, 248, 81, 81)
     ),
-  ListItemCategory.householdSupplies : ProductCategory(
-    title: "Health care", 
+  ListProductCategory.householdSupplies : ProductCategory(
+    title: "Household Supplies", 
     color: Color.fromARGB(255, 86, 32, 79)
     ),
-  ListItemCategory.other : ProductCategory(
-    title: "Health care", 
+  ListProductCategory.other : ProductCategory(
+    title: "Other", 
     color: Color.fromARGB(255, 102, 102, 102)
     ),
 };

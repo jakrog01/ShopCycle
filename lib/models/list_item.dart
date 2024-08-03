@@ -1,4 +1,4 @@
-import 'package:shopcycle/models/Category/list_item_category.dart';
+import 'package:shopcycle/models/Category/list_product_category.dart';
 
 class ListItem {
   const ListItem(
@@ -6,5 +6,5 @@ class ListItem {
 
   final String itemName;
   final int quantity;
-  final ListItemCategory category;
+  final ListProductCategory category;
 }

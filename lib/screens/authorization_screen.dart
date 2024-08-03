@@ -36,8 +36,8 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
           content: Center(
         child: Row(
           children: [
-            const Icon(Icons.warning),
-            const SizedBox(
+            Icon(Icons.warning),
+            SizedBox(
               width: 8,
             ),
             Expanded(

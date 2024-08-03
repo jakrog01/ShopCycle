@@ -1,4 +1,4 @@
-enum ListItemCategory {
+enum ListProductCategory {
   fruits,
   vegetables,
   meat,
