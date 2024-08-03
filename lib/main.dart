@@ -16,8 +16,7 @@ void main() async {
 }
 
 var kAppTheme = ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 26, 38, 63),
-    brightness: Brightness.dark);
+    seedColor: const Color.fromARGB(255, 19, 39, 72), brightness: Brightness.dark);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -32,11 +31,9 @@ class MainApp extends StatelessWidget {
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const LoadingScreen();
-              }
-              else if (snapshot.hasData && !snapshot.data!.emailVerified) {
+              } else if (snapshot.hasData && !snapshot.data!.emailVerified) {
                 return const EmailVerificationScreen();
-              }
-              else if (snapshot.hasData && snapshot.data!.emailVerified) {
+              } else if (snapshot.hasData && snapshot.data!.emailVerified) {
                 return const ListsTabScreen();
               }
               return const AuthorizationScreen();

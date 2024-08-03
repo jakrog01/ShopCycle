@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -57,12 +58,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               const SizedBox(
                 height: 25,
               ),
-              SizedBox(
-                height: 30,
-                width: 30,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+              LoadingAnimationWidget.waveDots(
+                size: 30,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
               const SizedBox(
                 height: 10,

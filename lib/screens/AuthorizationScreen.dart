@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -27,8 +28,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
 
     if (!_isLogin && _acceptTerms) {
       termsValidation = true;
-    }
-    else if(_isLogin){
+    } else if (_isLogin) {
       termsValidation = true;
     }
 
@@ -48,7 +48,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
-            userCredentials.user?.sendEmailVerification();
+        userCredentials.user?.sendEmailVerification();
         return;
       }
     } on FirebaseAuthException catch (error) {
@@ -86,7 +86,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       return Container();
     } else {
       return CheckboxListTile(
-          contentPadding: EdgeInsets.only(left: 5),
+          contentPadding: const EdgeInsets.only(left: 5),
           controlAffinity: ListTileControlAffinity.leading,
           title: Transform.translate(
             offset: const Offset(-10, 0),
@@ -225,12 +225,12 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                                               ? null
                                               : _submit,
                                           child: _communicationWithFireBase
-                                              ? const SizedBox(
-                                                  height: 16,
-                                                  width: 16,
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                )
+                                              ? LoadingAnimationWidget
+                                                  .staggeredDotsWave(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onPrimary,
+                                                      size: 20)
                                               : Text(_isLogin
                                                   ? "Sign in"
                                                   : "Sign up")),
