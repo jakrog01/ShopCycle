@@ -16,7 +16,7 @@ class AuthorizationScreen extends StatefulWidget {
 
 class _AutohrizationScreenState extends State<AuthorizationScreen> {
   final _form = GlobalKey<FormState>();
-  var _communicationWithFireBase = false;
+  var _waitingForFireBase = false;
   var _isLogin = true;
   var _acceptTerms = false;
   var _enteredEmail = '';
@@ -30,14 +30,33 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       termsValidation = true;
     } else if (_isLogin) {
       termsValidation = true;
+    } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(
+        child: Row(
+          children: [
+            const Icon(Icons.warning),
+            const SizedBox(
+              width: 8,
+            ),
+            Expanded(
+                child: Text("You have to accept the terms",
+                    overflow: TextOverflow.clip))
+          ],
+        ),
+      )));
     }
 
     if (!(formsValidation && termsValidation)) {
+      setState(() {
+        _waitingForFireBase = false;
+      });
       return;
     }
 
     setState(() {
-      _communicationWithFireBase = true;
+      _waitingForFireBase = true;
     });
 
     _form.currentState!.save();
@@ -69,7 +88,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
       )));
     }
     setState(() {
-      _communicationWithFireBase = false;
+      _waitingForFireBase = false;
     });
   }
 
@@ -81,7 +100,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
     return false;
   }
 
-  Widget TermsCheckBox() {
+  Widget termsCheckBox() {
     if (_isLogin) {
       return Container();
     } else {
@@ -197,7 +216,7 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                                       _enteredPassword = newValue!;
                                     },
                                   ),
-                                  TermsCheckBox(),
+                                  termsCheckBox(),
                                   const SizedBox(
                                     height: 12,
                                   ),
@@ -221,10 +240,10 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
                                               backgroundColor: Theme.of(context)
                                                   .colorScheme
                                                   .primaryContainer),
-                                          onPressed: _communicationWithFireBase
+                                          onPressed: _waitingForFireBase
                                               ? null
                                               : _submit,
-                                          child: _communicationWithFireBase
+                                          child: _waitingForFireBase
                                               ? LoadingAnimationWidget
                                                   .staggeredDotsWave(
                                                       color: Theme.of(context)

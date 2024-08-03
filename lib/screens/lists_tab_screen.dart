@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shopcycle/screens/ShoppingListScreen.dart';
+import 'package:shopcycle/screens/shopping_list_page.dart';
+import 'package:shopcycle/widgets/add_new_product.dart';
 import 'package:shopcycle/widgets/main_drawer.dart';
-import 'package:shopcycle/screens/SavedShoppingListScreen.dart';
+import 'package:shopcycle/screens/saved_shoppping_list_page.dart';
 
 class ListsTabScreen extends StatefulWidget {
   const ListsTabScreen({super.key});
@@ -23,23 +24,30 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = const SavedShoppingListsScreen();
-    var _screenTitle = "Saved Shopping Lists";
+    Widget activePage = const SavedShoppingListsPage();
+    var screenTitle = "Saved Shopping Lists";
+
+    void addItem(){
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
+    }
 
     if (_selectedPageIndex == 1) {
-      setState(() {
-        _screenTitle = "Shopping List ";
-        activePage = const ShoppingListScreen();
-      });
+      screenTitle = "Shopping List ";
+      activePage = const ShoppingListPage();
     }
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
-        title: Text(_screenTitle),
+        title: Text(screenTitle),
       ),
       drawer: const MainDrawer(),
       body: activePage,
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        onPressed: (_selectedPageIndex == 0)? null : addItem,
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedPageIndex,
         backgroundColor: Theme.of(context).colorScheme.surface,

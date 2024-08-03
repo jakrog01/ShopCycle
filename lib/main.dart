@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopcycle/screens/EmailVerificationScreen.dart';
-import 'package:shopcycle/screens/ListsTabScreen.dart';
+import 'package:shopcycle/screens/email_verification_screen.dart';
+import 'package:shopcycle/screens/lists_tab_screen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/AuthorizationScreen.dart';
-import 'package:shopcycle/screens/LoadingScreen.dart';
+import 'screens/authorization_screen.dart';
+import 'package:shopcycle/screens/loading_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,8 @@ void main() async {
 }
 
 var kAppTheme = ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 19, 39, 72), brightness: Brightness.dark);
+    seedColor: const Color.fromARGB(255, 19, 39, 72),
+    brightness: Brightness.dark);
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
