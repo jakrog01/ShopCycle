@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
@@ -51,10 +50,8 @@ class _AddNewProductState extends State<AddNewProduct> {
                   ),
                   TextFormField(
                     maxLength: 50,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(color: Theme.of(context).colorScheme.surface),
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface),
                     decoration: const InputDecoration(labelText: 'Quantity'),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -85,36 +82,64 @@ class _AddNewProductState extends State<AddNewProduct> {
                     children: [
                       for (final category in productsCategories.entries)
                         ChoiceChip(
+                          padding: const EdgeInsets.all(7),
+                          shape: StadiumBorder(
+                              side: BorderSide(
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
                           avatar: Container(
                             decoration: BoxDecoration(
+                                shape: BoxShape.circle,
                                 gradient: LinearGradient(
-                              colors: [
-                                category.value.color,
-                                category.value.color.withOpacity(0.7)
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )),
+                                  colors: [
+                                    category.value.color,
+                                    category.value.color.withOpacity(0.7)
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )),
                           ),
+                          selectedColor: Theme.of(context).colorScheme.primary,
                           backgroundColor:
-                              Theme.of(context).colorScheme.primary ,
+                              Theme.of(context).colorScheme.surface,
+                          labelStyle: _category == category.key
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.surface)
+                              : Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                           label: Text(
                             category.value.title,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
                           ),
                           selected: _category == category.key,
                           onSelected: (bool selected) {
                             setState(() {
-                              _category = selected ? category.key : null;
+                              _category = category.key;
                             });
                           },
                         ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(onPressed: () {}, child: const Text("Cancel")),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {}, child: const Text("Add Product"))
                     ],
                   )
                 ],
