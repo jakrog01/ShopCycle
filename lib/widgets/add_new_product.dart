@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
 
+
 class AddNewProduct extends StatefulWidget {
   const AddNewProduct({super.key});
 
@@ -12,9 +13,19 @@ class AddNewProduct extends StatefulWidget {
 }
 
 class _AddNewProductState extends State<AddNewProduct> {
+  final _form = GlobalKey<FormState>();
   String? _title;
   int? _quantity;
   ListProductCategory? _category = ListProductCategory.other;
+
+  void _addItem() {
+    final dataValidation = _form.currentState!.validate();
+
+    if (!dataValidation && _category == null) {
+      return;
+    }
+    _form.currentState!.save();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +37,7 @@ class _AddNewProductState extends State<AddNewProduct> {
         body: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Form(
+            key: _form,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -78,7 +90,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                     height: 10,
                   ),
                   Wrap(
-                    spacing: 5,
+                    spacing: 7,
                     children: [
                       for (final category in productsCategories.entries)
                         ChoiceChip(
@@ -134,12 +146,16 @@ class _AddNewProductState extends State<AddNewProduct> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(onPressed: () {}, child: const Text("Cancel")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel")),
                       const SizedBox(
                         width: 10,
                       ),
                       ElevatedButton(
-                          onPressed: () {}, child: const Text("Add Product"))
+                          onPressed: _addItem, child: const Text("Add Product"))
                     ],
                   )
                 ],

@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:shopcycle/models/shopping_list.dart';
+import 'package:shopcycle/widgets/saved_list_view.dart';
 
 class SavedShoppingListsPage extends StatelessWidget {
-  const SavedShoppingListsPage({super.key});
+  SavedShoppingListsPage({super.key, required this.savedShoppingList});
+
+  final List<ShoppingList> savedShoppingList;
+  String? usedListTitle;
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("NOTHING HERE NOW"));
+    return Column(
+      children: [
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.add_shopping_cart)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SavedListView(
+          savedShoppingList: savedShoppingList,
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 }

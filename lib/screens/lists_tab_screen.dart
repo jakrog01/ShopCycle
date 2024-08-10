@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shopcycle/models/data_model.dart';
 import 'package:shopcycle/screens/shopping_list_page.dart';
 import 'package:shopcycle/widgets/add_new_product.dart';
 import 'package:shopcycle/widgets/main_drawer.dart';
 import 'package:shopcycle/screens/saved_shoppping_list_page.dart';
+import 'package:shopcycle/models/shopping_list.dart';
 
 class ListsTabScreen extends StatefulWidget {
   const ListsTabScreen({super.key});
@@ -15,6 +17,8 @@ class ListsTabScreen extends StatefulWidget {
 
 class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
+  final List<ShoppingList> _savedShoppingLists = [savedListModel, savedListModel2];
+  
 
   void _selectPage(int index) {
     setState(() {
@@ -24,7 +28,7 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = const SavedShoppingListsPage();
+    Widget activePage = SavedShoppingListsPage(savedShoppingList: _savedShoppingLists);
     var screenTitle = "Saved Shopping Lists";
 
     void addItem(){
@@ -43,7 +47,7 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
       ),
       drawer: const MainDrawer(),
       body: activePage,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:(_selectedPageIndex == 0)? null : FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: (_selectedPageIndex == 0)? null : addItem,
         child: const Icon(Icons.add),

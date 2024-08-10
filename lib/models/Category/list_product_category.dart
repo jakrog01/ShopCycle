@@ -4,6 +4,7 @@ enum ListProductCategory {
   meat,
   deli,
   dairy,
+  drinks,
   snacks,
   bakery,
   baking,
