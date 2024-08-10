@@ -16,9 +16,9 @@ class SavedShoppingListsPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.add_shopping_cart)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.add_shopping_cart)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
             ],
           ),
         ),

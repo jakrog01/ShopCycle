@@ -20,7 +20,7 @@ class _SavedListViewState extends State<SavedListView> {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        height: MediaQuery.sizeOf(context).height - 250,
+        height: MediaQuery.sizeOf(context).height - 230,
         width: MediaQuery.sizeOf(context).width,
         child: Container(
             decoration: BoxDecoration(
@@ -35,23 +35,26 @@ class _SavedListViewState extends State<SavedListView> {
                 children: [
                   for (final shoppingList in widget.savedShoppingList)
                     SavedShoppingListView(displayedShoppingList: shoppingList),
-                  Container(
-                    color: Theme.of(context).colorScheme.primary,
-                    child: Center(
-                        child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.add),
-                        Text("Add new list",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary)),
-                      ],
-                    )),
+                  InkWell(
+                    onTap: (){},
+                    child: Container(
+                      color: Theme.of(context).colorScheme.primary,
+                      child: Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.add),
+                          Text("Add new list",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary)),
+                        ],
+                      )),
+                    ),
                   ),
                 ])),
       ),

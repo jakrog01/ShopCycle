@@ -21,7 +21,7 @@ class _AddNewProductState extends State<AddNewProduct> {
   void _addItem() {
     final dataValidation = _form.currentState!.validate();
 
-    if (!dataValidation && _category == null) {
+    if (!dataValidation || _category == null) {
       return;
     }
     _form.currentState!.save();
@@ -66,7 +66,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                         color: Theme.of(context).colorScheme.onSurface),
                     decoration: const InputDecoration(labelText: 'Quantity'),
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
+                      if (value == null || value.trim().isEmpty || int.tryParse(value) == null) {
                         return 'Please enter a valid quantity';
                       }
                       return null;
