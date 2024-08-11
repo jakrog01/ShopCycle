@@ -11,24 +11,35 @@ class SavedShoppingListsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Text(
+          "CHOOSE YOUR LIST",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold
+              ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        SavedShoppingListView(
+          savedShoppingList: savedShoppingList,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.add_shopping_cart)),
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.add_shopping_cart)),
               IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
               IconButton(onPressed: () {}, icon: const Icon(Icons.delete)),
             ],
           ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        SavedListView(
-          savedShoppingList: savedShoppingList,
-        ),
-        const SizedBox(height: 20),
       ],
     );
   }

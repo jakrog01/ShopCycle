@@ -7,7 +7,7 @@ final savedListModel =
   ProductsListItem(
       itemName: "Twaróg", quantity: 250, category: ListProductCategory.dairy),
   ProductsListItem(itemName: "Bułki", quantity: 2, category: ListProductCategory.baking)
-]);
+], description: "To po prostu twaróg i dwie bułki");
 
 
 final savedListModel2 =

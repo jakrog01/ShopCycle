@@ -49,7 +49,7 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
       body: activePage,
       floatingActionButton:(_selectedPageIndex == 0)? null : FloatingActionButton(
         shape: const CircleBorder(),
-        onPressed: (_selectedPageIndex == 0)? null : addItem,
+        onPressed: addItem,
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
