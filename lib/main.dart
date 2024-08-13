@@ -16,7 +16,7 @@ void main() async {
 }
 
 var kAppTheme = ColorScheme.fromSeed(
-    seedColor: const Color.fromARGB(255, 19, 39, 72),
+    seedColor: const Color.fromARGB(255, 129, 129, 168),
     brightness: Brightness.dark);
 
 class MainApp extends StatelessWidget {

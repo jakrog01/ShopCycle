@@ -22,7 +22,14 @@ class SavedShoppingListDetalisView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(title: Text(displayedShoppingList.listName),),
+      appBar: AppBar(
+      actions: [PopupMenuButton(itemBuilder: (context) => [
+        const PopupMenuItem(
+          child: Row(children: [Icon(Icons.edit), SizedBox(width: 2,), Text("Edit")],)),
+          const PopupMenuItem(
+          child: Row(children: [Icon(Icons.delete), SizedBox(width: 2,), Text("Delete")],))
+      ])],
+      title: Text(displayedShoppingList.listName),),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -43,7 +50,7 @@ class SavedShoppingListDetalisView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
                         child: Row(
                           children: [
-                            Container(width: 20, height: 20, color: productsCategories[category]!.color,),
+                            Container(width: 15, height: 15, color: productsCategories[category]!.color,),
                             const SizedBox(width: 5,),
                             Text(
                               productsCategories[category]!.title,
@@ -66,7 +73,7 @@ class SavedShoppingListDetalisView extends StatelessWidget {
                                         Theme.of(context).colorScheme.onSurface),
                           ),
                           trailing: Text(
-                            item.quantity.toString(),
+                            "${item.quantity.toString()}${item.unit}",
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!

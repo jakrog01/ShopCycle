@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/shopping_list.dart';
-import 'package:shopcycle/widgets/saved_list_view.dart';
 import 'package:shopcycle/widgets/saved_shopping_list_details.dart';
 
 class SavedShoppingListPreview extends StatelessWidget {
-  SavedShoppingListPreview({super.key, required this.displayedShoppingList});
+  const SavedShoppingListPreview({super.key, required this.displayedShoppingList});
 
   final ShoppingList displayedShoppingList;
 
@@ -12,7 +11,11 @@ class SavedShoppingListPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: InkWell(
-        onTap: (){Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => SavedShoppingListDetalisView(displayedShoppingList: displayedShoppingList)));},
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (ctx) => SavedShoppingListDetalisView(
+                  displayedShoppingList: displayedShoppingList)));
+        },
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -35,7 +38,7 @@ class SavedShoppingListPreview extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.5),
+                            .withOpacity(0.6),
                       ),
                       Center(
                         child: displayedShoppingList.description == null
@@ -46,10 +49,10 @@ class SavedShoppingListPreview extends StatelessWidget {
                                     .textTheme
                                     .titleMedium!
                                     .copyWith(
-                                      color:
-                                          Theme.of(context).colorScheme.onSurface,
-                                          overflow: TextOverflow.clip
-                                    ),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        overflow: TextOverflow.clip),
                                 textAlign: TextAlign.center,
                               ),
                       ),

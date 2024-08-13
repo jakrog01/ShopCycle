@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
-
+import 'package:shopcycle/models/product_units.dart';
 
 class AddNewProduct extends StatefulWidget {
   const AddNewProduct({super.key});
@@ -16,9 +16,11 @@ class _AddNewProductState extends State<AddNewProduct> {
   final _form = GlobalKey<FormState>();
   String? _title;
   int? _quantity;
+  String? _unit = ListProductUnits.g.name;
+
   ListProductCategory? _category = ListProductCategory.other;
 
-  void _addItem() {
+  void _addProduct() {
     final dataValidation = _form.currentState!.validate();
 
     if (!dataValidation || _category == null) {
@@ -60,20 +62,69 @@ class _AddNewProductState extends State<AddNewProduct> {
                   const SizedBox(
                     height: 10,
                   ),
-                  TextFormField(
-                    maxLength: 50,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface),
-                    decoration: const InputDecoration(labelText: 'Quantity'),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty || int.tryParse(value) == null) {
-                        return 'Please enter a valid quantity';
-                      }
-                      return null;
-                    },
-                    onSaved: (newValue) {
-                      _quantity = int.parse(newValue!);
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                          decoration:
+                              const InputDecoration(labelText: 'Quantity'),
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null ||
+                                value.trim().isEmpty ||
+                                int.tryParse(value) == null) {
+                              return 'Please enter a valid quantity';
+                            }
+                            return null;
+                          },
+                          onSaved: (newValue) {
+                            _quantity = int.parse(newValue!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                        width: 70,
+                        child: DropdownButtonFormField<String>(
+                          value: _unit,
+                          isDense: true,
+                          isExpanded: true,
+                          decoration: InputDecoration(labelText: "Unit"),
+                          dropdownColor: Theme.of(context).colorScheme.surface,
+                          items: ListProductUnits.values
+                              .map((ListProductUnits unit) {
+                            return DropdownMenuItem<String>(
+                              value: unit.name,
+                              child: Center(
+                                child: Text(unit.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface)),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _unit = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
@@ -155,7 +206,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                         width: 10,
                       ),
                       ElevatedButton(
-                          onPressed: _addItem, child: const Text("Add Product"))
+                          onPressed: _addProduct, child: const Text("Add Product"))
                     ],
                   )
                 ],
