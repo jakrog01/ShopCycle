@@ -65,19 +65,19 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
               InkWell(
                 onTap: addNewList,
                 child: Container(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.surfaceContainerHigh,
                   child: Center(
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.add),
+                      Icon(Icons.add, color: Theme.of(context).colorScheme.onSurface),
                       Text("Add new list",
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
                               .copyWith(
                                   color:
-                                      Theme.of(context).colorScheme.onPrimary)),
+                                      Theme.of(context).colorScheme.onSurfaceVariant)),
                     ],
                   )),
                 ),

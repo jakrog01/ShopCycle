@@ -25,13 +25,24 @@ class ProductsListItem {
   final ListProductCategory category;
   bool checkState = false;
 
-  Map<String, dynamic> get firestoreData {
+  Map<String, dynamic> get newfirestoreData {
     return {
       "name": itemName,
       "id": id,
       "quantity": quantity,
       "unit": unit,
       "checkState": false,
+      "category": category.name,
+    };
+  }
+
+  Map<String, dynamic> get firestoreData {
+    return {
+      "name": itemName,
+      "id": id,
+      "quantity": quantity,
+      "unit": unit,
+      "checkState": checkState,
       "category": category.name,
     };
   }

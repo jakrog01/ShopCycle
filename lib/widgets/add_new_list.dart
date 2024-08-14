@@ -163,7 +163,7 @@ class _AddNewListState extends State<AddNewList> {
                           Text("Add new product")
                         ],
                       )),
-                  ShoppingListEditView(shopping_list: shoppingList),
+                  ShoppingListEditView(shoppingList: shoppingList),
                   const SizedBox(
                     height: 15,
                   ),

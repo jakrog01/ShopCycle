@@ -19,8 +19,7 @@ class ListsTabScreen extends StatefulWidget {
 class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
   final List<ShoppingList> _savedShoppingLists = [savedListModel, savedListModel2];
-  final List<ProductsListItem> _currentList = [];
-  
+  final ShoppingList _currentShoppingList = ShoppingList(listName: "Current list", shoppingList: [], );
 
   void _selectPage(int index) {
     setState(() {
@@ -33,17 +32,25 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
     Widget activePage = SavedShoppingListsPage(savedShoppingList: _savedShoppingLists);
     var screenTitle = "Saved Shopping Lists";
 
-    void addItem(){
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
+    void addItem() async{
+      var product = await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
+      
+      if (product == null){
+        return;
+      }
+
+      setState(() {
+        _currentShoppingList.shoppingList.add(product);
+      });
     }
 
     if (_selectedPageIndex == 1) {
       screenTitle = "Shopping List ";
-      activePage = const ShoppingListPage();
+      activePage = ShoppingListPage(currentShoppingList: _currentShoppingList);
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       appBar: AppBar(
         title: Text(screenTitle),
       ),

@@ -35,7 +35,7 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
         Text(
           pageIsAddPage ? "ADD NEW LIST" : "CHOOSE YOUR LIST",
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.bold),
         ),
         const SizedBox(
@@ -55,7 +55,7 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
             children: [
               ElevatedButton(
                   onPressed: !pageIsAddPage ? () {} : null,
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.add_shopping_cart),
                       SizedBox(

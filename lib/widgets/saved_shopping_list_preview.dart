@@ -52,7 +52,7 @@ class SavedShoppingListPreview extends StatelessWidget {
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onSurface,
+                                            .onSurfaceVariant,
                                         overflow: TextOverflow.clip),
                                 textAlign: TextAlign.center,
                               ),

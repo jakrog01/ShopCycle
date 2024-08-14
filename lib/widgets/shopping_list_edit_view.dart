@@ -4,9 +4,9 @@ import 'package:shopcycle/models/Category/products_categories.dart';
 import 'package:shopcycle/models/products_list_item.dart';
 
 class ShoppingListEditView extends StatefulWidget {
-  const ShoppingListEditView({super.key, required this.shopping_list});
+  const ShoppingListEditView({super.key, required this.shoppingList});
 
-  final List<ProductsListItem> shopping_list;
+  final List<ProductsListItem> shoppingList;
 
   @override
   State<ShoppingListEditView> createState() {
@@ -19,14 +19,14 @@ class _ShoppingListEditViewState extends State<ShoppingListEditView> {
 
   void createCategorizedLists() {
     categorizedMap.clear();
-    for (var item in widget.shopping_list) {
+    for (var item in widget.shoppingList) {
       categorizedMap.putIfAbsent(item.category, () => []).add(item);
     }
   }
 
   void _removeItem(ProductsListItem product) {
     setState(() {
-      widget.shopping_list.remove(product);
+      widget.shoppingList.remove(product);
     });
   }
 
@@ -36,7 +36,7 @@ class _ShoppingListEditViewState extends State<ShoppingListEditView> {
     return SizedBox(
       height: MediaQuery.sizeOf(context).height / 3,
       width: MediaQuery.sizeOf(context).width - 50,
-      child: widget.shopping_list.isEmpty
+      child: widget.shoppingList.isEmpty
           ? Center(
               child: Text("List is empty",
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
