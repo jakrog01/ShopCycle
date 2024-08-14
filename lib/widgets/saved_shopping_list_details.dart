@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
 import 'package:shopcycle/models/shopping_list.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
@@ -7,7 +9,9 @@ import 'package:shopcycle/widgets/add_new_list.dart';
 
 class SavedShoppingListDetalisView extends StatefulWidget {
   SavedShoppingListDetalisView(
-      {super.key, required this.displayedShoppingList, required this.removeList});
+      {super.key,
+      required this.displayedShoppingList,
+      required this.removeList});
 
   ShoppingList displayedShoppingList;
   final Function removeList;
@@ -23,7 +27,7 @@ class _SavedShoppingListDetalisViewState
 
   void createCategorizedLists() {
     categorizedMap.clear();
-    for (var item in widget.displayedShoppingList.shoppingList) {
+    for (var item in widget.displayedShoppingList.products) {
       categorizedMap.putIfAbsent(item.category, () => []).add(item);
     }
   }
@@ -38,6 +42,8 @@ class _SavedShoppingListDetalisViewState
     } else {
       setState(() {
         widget.displayedShoppingList = edited_list;
+        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
+        collection('savedLists').doc(widget.displayedShoppingList.listID).set(widget.displayedShoppingList.firestoreData);
       });
     }
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -68,6 +69,15 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
         userCredentials.user?.sendEmailVerification();
+        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
+        collection('current_list').doc(FirebaseAuth.instance.currentUser!.uid).set(
+          {
+          "ID": "current_list",
+          "list_name": "current_list",
+          "description": "",
+          "products": []
+          }
+        );
         return;
       }
     } on FirebaseAuthException catch (error) {

@@ -16,7 +16,22 @@ class ProductsListItem {
       required this.quantity,
       required this.category,
       required this.unit,
-      required this.id});
+      required this.id,
+      required this.checkState});
+
+  factory ProductsListItem.fromMap(Map<String, dynamic> data) {
+    return ProductsListItem.withID(
+      unit: data['unit'] as String,
+      quantity: data['quantity'] as int,
+      itemName: data['name'] as String,
+      checkState: data['checkState'] as bool,
+      id: data['id'] as String,
+      category: ListProductCategory.values.firstWhere(
+        (e) => e.toString().split('.').last == data['category'],
+        orElse: () => ListProductCategory.other,
+      ),
+    );
+  }
 
   final String id;
   final String itemName;
@@ -25,7 +40,7 @@ class ProductsListItem {
   final ListProductCategory category;
   bool checkState = false;
 
-  Map<String, dynamic> get newfirestoreData {
+  Map<String, dynamic> get newFirestoreData {
     return {
       "name": itemName,
       "id": id,

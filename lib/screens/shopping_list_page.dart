@@ -13,7 +13,7 @@ class ShoppingListPage extends StatefulWidget {
 class _ShoppingListPageState extends State<ShoppingListPage> {
   @override
   Widget build(BuildContext context) {
-    return widget.currentShoppingList.shoppingList.isEmpty
+    return widget.currentShoppingList.products.isEmpty
         ? Center(
             child: Text("ADD SOMETHING",
                 style: Theme.of(context)
@@ -21,6 +21,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                     .bodyMedium!
                     .copyWith(color: Theme.of(context).colorScheme.onSurface)))
         : CurrentShoppingListDisplay(
-            shoppingList: widget.currentShoppingList.shoppingList);
+            shoppingList: widget.currentShoppingList.products);
   }
 }

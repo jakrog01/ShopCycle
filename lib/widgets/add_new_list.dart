@@ -31,7 +31,7 @@ class _AddNewListState extends State<AddNewList> {
       id = widget.shoppingList!.listID;
       title = widget.shoppingList!.listName;
       description = widget.shoppingList!.description;
-      shoppingList = widget.shoppingList!.shoppingList;
+      shoppingList = widget.shoppingList!.products;
     } else {
       id = null;
       title = null;
@@ -63,19 +63,20 @@ class _AddNewListState extends State<AddNewList> {
     if (shoppingList.isEmpty) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          duration: Duration(seconds: 1),
           content: Center(
-        child: Row(
-          children: [
-            Icon(Icons.warning),
-            SizedBox(
-              width: 8,
+            child: Row(
+              children: [
+                Icon(Icons.warning),
+                SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                    child: Text('Products list must not be empty',
+                        overflow: TextOverflow.clip))
+              ],
             ),
-            Expanded(
-                child: Text('Products list must not be empty',
-                    overflow: TextOverflow.clip))
-          ],
-        ),
-      )));
+          )));
       return;
     }
 
@@ -83,13 +84,11 @@ class _AddNewListState extends State<AddNewList> {
 
     if (id == null) {
       Navigator.of(context).pop(ShoppingList(
-          listName: title!,
-          shoppingList: shoppingList,
-          description: description));
+          listName: title!, products: shoppingList, description: description));
     } else {
       Navigator.of(context).pop(ShoppingList.withID(
           listName: title!,
-          shoppingList: shoppingList,
+          products: shoppingList,
           description: description,
           listID: id!));
     }

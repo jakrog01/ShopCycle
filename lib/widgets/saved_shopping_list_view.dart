@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/shopping_list.dart';
 import 'package:shopcycle/widgets/add_new_list.dart';
@@ -8,11 +10,13 @@ class SavedShoppingListView extends StatefulWidget {
       {super.key,
       required this.savedShoppingList,
       required this.onListPage,
-      required this.onAddPage});
+      required this.onAddPage,
+      required this.updateIndex});
 
   final List<ShoppingList> savedShoppingList;
   final Function onListPage;
   final Function onAddPage;
+  final Function updateIndex;
 
   @override
   State<SavedShoppingListView> createState() {
@@ -28,9 +32,11 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
     if (list == null){
       return;
     }
-    else{
+    else if (list is ShoppingList){
       setState(() {
         widget.savedShoppingList.add(list);
+        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
+        collection('savedLists').doc(list.listID).set(list.firestoreData);
       });
     }
   }
@@ -38,6 +44,8 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
   void removeList(ShoppingList list){
     setState(() {
       widget.savedShoppingList.remove(list);
+      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
+      collection('savedLists').doc(list.listID).delete();
     });
   }
 
@@ -57,6 +65,7 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
                   widget.onListPage();
                 }
                 itemindex = index;
+                widget.updateIndex(index);
               });
             },
             children: [

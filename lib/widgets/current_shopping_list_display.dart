@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
 import 'package:shopcycle/models/products_list_item.dart';
@@ -22,6 +24,24 @@ class _CurrentShoppingListDisplayState
     for (var item in widget.shoppingList) {
       categorizedMap.putIfAbsent(item.category, () => []).add(item);
     }
+  }
+
+  void _removeItem(ProductsListItem product) {
+    setState(() {
+      widget.shoppingList.remove(product);
+
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('current_list')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "products": [
+          for (final product in  widget.shoppingList)
+            product.newFirestoreData
+        ]
+      });
+    });
   }
 
   @override
@@ -74,7 +94,7 @@ class _CurrentShoppingListDisplayState
                               productsCategories[category]!.title,
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleSmall!
+                                  .titleMedium!
                                   .copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -109,41 +129,61 @@ class _CurrentShoppingListDisplayState
                                       .colorScheme
                                       .primary
                                       .withOpacity(0.1),
-                              child: CheckboxListTile(
-                                dense: true,
-                                activeColor: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.4),
-                                value: item.checkState,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    item.checkState = value!;
-                                  });
+                              child: Dismissible(
+                                onDismissed: (direction) {
+                                  _removeItem(item);
                                 },
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                title: Text(
-                                  item.itemName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                ),
-                                secondary: Text(
-                                  "${item.quantity.toString()}${item.unit}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
+                                key: ValueKey(item.id),
+                                child: CheckboxListTile(
+                                  dense: true,
+                                  activeColor: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.4),
+                                  value: item.checkState,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      item.checkState = value!;
+                                      FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .collection('current_list')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .update({
+                                        "products": [
+                                          for (final product
+                                              in widget.shoppingList)
+                                            product.firestoreData
+                                        ]
+                                      });
+                                    });
+                                  },
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  title: Text(
+                                    item.itemName,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                  ),
+                                  secondary: Text(
+                                    "${item.quantity.toString()}${item.unit}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                  ),
                                 ),
                               ),
                             ),

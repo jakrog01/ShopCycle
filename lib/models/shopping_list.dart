@@ -5,27 +5,27 @@ const uuid = Uuid();
 
 class ShoppingList {
   ShoppingList(
-      {required this.listName, required this.shoppingList, this.description})
+      {required this.listName, required this.products, this.description})
       : listID = uuid.v4();
 
   ShoppingList.withID(
       {required this.listName,
-      required this.shoppingList,
+      required this.products,
       this.description,
       required this.listID});
 
   final String listID;
   final String listName;
   final String? description;
-  final List<ProductsListItem> shoppingList;
+  List<ProductsListItem> products;
 
   Map<String, dynamic> get firestoreData {
     return {
       "ID": listID,
       "list_name": listName,
       "description": description,
-      "shopping_list": [
-        for (final product in shoppingList) product.firestoreData
+      "products": [
+        for (final product in products) product.newFirestoreData
       ]
     };
   }

@@ -3,8 +3,9 @@ import 'package:shopcycle/models/shopping_list.dart';
 import 'package:shopcycle/widgets/saved_shopping_list_view.dart';
 
 class SavedShoppingListsPage extends StatefulWidget {
-  SavedShoppingListsPage({super.key, required this.savedShoppingList});
+  const SavedShoppingListsPage({super.key, required this.savedShoppingList, required this.addToCurrentList});
   final List<ShoppingList> savedShoppingList;
+  final Function addToCurrentList;
 
   @override
   State<SavedShoppingListsPage> createState() => _SavedShoppingListsPageState();
@@ -12,6 +13,7 @@ class SavedShoppingListsPage extends StatefulWidget {
 
 class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
   late bool pageIsAddPage = widget.savedShoppingList.isEmpty ? true : false;
+  int pageIndex = 0;
 
   void onAddPage() {
     setState(() {
@@ -23,6 +25,10 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
     setState(() {
       pageIsAddPage = false;
     });
+  }
+
+  void updatePageIndex(int index){
+      pageIndex = index;
   }
 
   String? usedListTitle;
@@ -45,6 +51,7 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
           savedShoppingList: widget.savedShoppingList,
           onAddPage: onAddPage,
           onListPage: onListPage,
+          updateIndex: updatePageIndex,
         ),
         const SizedBox(
           height: 20,
@@ -54,7 +61,9 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                  onPressed: !pageIsAddPage ? () {} : null,
+                  onPressed: !pageIsAddPage ? () {
+                    widget.addToCurrentList(pageIndex);
+                  } : null,
                   child: const Row(
                     children: [
                       Icon(Icons.add_shopping_cart),

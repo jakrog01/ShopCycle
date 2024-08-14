@@ -27,6 +27,9 @@ class _AddNewProductState extends State<AddNewProduct> {
       return;
     }
     _form.currentState!.save();
+    if (_unit == "none"){
+      _unit = '';
+    }
     Navigator.of(context).pop(ProductsListItem(itemName: _title!, quantity: _quantity!.toInt(), 
     category: _category!, unit: _unit!));
   }

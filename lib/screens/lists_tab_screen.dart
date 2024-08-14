@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/data_model.dart';
 import 'package:shopcycle/models/products_list_item.dart';
@@ -6,6 +8,7 @@ import 'package:shopcycle/widgets/add_new_product.dart';
 import 'package:shopcycle/widgets/main_drawer.dart';
 import 'package:shopcycle/screens/saved_shoppping_list_page.dart';
 import 'package:shopcycle/models/shopping_list.dart';
+import 'dart:async';
 
 class ListsTabScreen extends StatefulWidget {
   const ListsTabScreen({super.key});
@@ -18,8 +21,41 @@ class ListsTabScreen extends StatefulWidget {
 
 class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
-  final List<ShoppingList> _savedShoppingLists = [savedListModel, savedListModel2];
-  final ShoppingList _currentShoppingList = ShoppingList(listName: "Current list", shoppingList: [], );
+  late ShoppingList _currentShoppingList;
+  StreamSubscription<DocumentSnapshot>? _current_list_subscription;
+
+  final List<ShoppingList> _savedShoppingLists = [
+    savedListModel,
+    savedListModel2
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _current_list_subscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('current_list')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .snapshots()
+        .listen((event) {
+      final data = event.data();
+      if (data != null && data['products'] != null) {
+        _currentShoppingList = ShoppingList(
+            listName: "current_lsit",
+            products: (data['products'] as List<dynamic>)
+                .map((productData) => ProductsListItem.fromMap(productData))
+                .toList());
+        print(_currentShoppingList.products);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _current_list_subscription?.cancel();
+    super.dispose();
+  }
 
   void _selectPage(int index) {
     setState(() {
@@ -27,20 +63,75 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
     });
   }
 
+  void addListToCurrent(int index) {
+    List<ProductsListItem> newList = [];
+
+    for (final product in _savedShoppingLists[index].products) {
+      newList.add(ProductsListItem(
+          itemName: product.itemName,
+          quantity: product.quantity,
+          category: product.category,
+          unit: product.unit));
+    }
+    setState(() {
+      _currentShoppingList.products.addAll(newList);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('current_list')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "products": [
+          for (final product in _currentShoppingList.products)
+            product.newFirestoreData
+        ]
+      });
+    });
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      duration: Duration(seconds: 1),
+      content: Row(
+        children: [
+          Icon(Icons.add_shopping_cart),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text("List added to shopping list"),
+          ),
+        ],
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget activePage = SavedShoppingListsPage(savedShoppingList: _savedShoppingLists);
+    Widget activePage = SavedShoppingListsPage(
+      savedShoppingList: _savedShoppingLists,
+      addToCurrentList: addListToCurrent,
+    );
     var screenTitle = "Saved Shopping Lists";
 
-    void addItem() async{
-      var product = await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
-      
-      if (product == null){
+    void addItem() async {
+      var product = await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
+
+      if (product == null) {
         return;
       }
 
       setState(() {
-        _currentShoppingList.shoppingList.add(product);
+        _currentShoppingList.products.add(product);
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('current_list')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "products": [
+            for (final product in _currentShoppingList.products)
+              product.newFirestoreData
+          ]
+        });
       });
     }
 
@@ -52,15 +143,42 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
       appBar: AppBar(
+        actions: [
+          _selectedPageIndex == 1
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentShoppingList.products.clear();
+                      FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .collection('current_list')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({
+                        "products": [
+                          for (final product in _currentShoppingList.products)
+                            product.newFirestoreData
+                        ]
+                      });
+                    });
+                  },
+                  icon: Icon(
+                    Icons.clear_all,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ))
+              : SizedBox()
+        ],
         title: Text(screenTitle),
       ),
       drawer: const MainDrawer(),
       body: activePage,
-      floatingActionButton:(_selectedPageIndex == 0)? null : FloatingActionButton(
-        shape: const CircleBorder(),
-        onPressed: addItem,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: (_selectedPageIndex == 0)
+          ? null
+          : FloatingActionButton(
+              shape: const CircleBorder(),
+              onPressed: addItem,
+              child: const Icon(Icons.add),
+            ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedPageIndex,
         backgroundColor: Theme.of(context).colorScheme.surface,
