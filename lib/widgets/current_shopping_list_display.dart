@@ -29,7 +29,6 @@ class _CurrentShoppingListDisplayState
   void _removeItem(ProductsListItem product) {
     setState(() {
       widget.shoppingList.remove(product);
-
       FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -38,7 +37,7 @@ class _CurrentShoppingListDisplayState
           .update({
         "products": [
           for (final product in  widget.shoppingList)
-            product.newFirestoreData
+            product.firestoreData
         ]
       });
     });
