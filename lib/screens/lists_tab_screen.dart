@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopcycle/models/data_model.dart';
+import 'package:shopcycle/models/products_list_item.dart';
 import 'package:shopcycle/screens/shopping_list_page.dart';
 import 'package:shopcycle/widgets/add_new_product.dart';
 import 'package:shopcycle/widgets/main_drawer.dart';
@@ -18,6 +19,7 @@ class ListsTabScreen extends StatefulWidget {
 class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
   final List<ShoppingList> _savedShoppingLists = [savedListModel, savedListModel2];
+  final List<ProductsListItem> _currentList = [];
   
 
   void _selectPage(int index) {

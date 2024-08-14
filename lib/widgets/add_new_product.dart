@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopcycle/models/Category/list_product_category.dart';
 import 'package:shopcycle/models/Category/products_categories.dart';
 import 'package:shopcycle/models/product_units.dart';
+import 'package:shopcycle/models/products_list_item.dart';
 
 class AddNewProduct extends StatefulWidget {
   const AddNewProduct({super.key});
@@ -17,7 +18,6 @@ class _AddNewProductState extends State<AddNewProduct> {
   String? _title;
   int? _quantity;
   String? _unit = ListProductUnits.g.name;
-
   ListProductCategory? _category = ListProductCategory.other;
 
   void _addProduct() {
@@ -27,6 +27,8 @@ class _AddNewProductState extends State<AddNewProduct> {
       return;
     }
     _form.currentState!.save();
+    Navigator.of(context).pop(ProductsListItem(itemName: _title!, quantity: _quantity!.toInt(), 
+    category: _category!, unit: _unit!));
   }
 
   @override

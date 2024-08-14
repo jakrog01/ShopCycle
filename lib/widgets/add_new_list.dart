@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shopcycle/models/shopping_list.dart';
 import 'package:shopcycle/widgets/add_new_product.dart';
 import 'package:shopcycle/models/products_list_item.dart';
+import 'package:shopcycle/widgets/shopping_list_edit_view.dart';
 
 class AddNewList extends StatefulWidget {
-  const AddNewList({super.key});
+  final ShoppingList? shoppingList;
+
+  const AddNewList({super.key}) : shoppingList = null;
+  const AddNewList.edit({super.key, required this.shoppingList});
 
   @override
   State<AddNewList> createState() {
@@ -13,13 +18,81 @@ class AddNewList extends StatefulWidget {
 
 class _AddNewListState extends State<AddNewList> {
   final _form = GlobalKey<FormState>();
-  String? _title;
-  String? _description;
-  List<ProductsListItem> _shoppingList = [];
+  String? id;
+  String? title;
+  String? description;
+  List<ProductsListItem> shoppingList = [];
 
-  void _addProduct() {
-    Navigator.of(context)
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.shoppingList != null) {
+      id = widget.shoppingList!.listID;
+      title = widget.shoppingList!.listName;
+      description = widget.shoppingList!.description;
+      shoppingList = widget.shoppingList!.shoppingList;
+    } else {
+      id = null;
+      title = null;
+      description = null;
+      shoppingList = [];
+    }
+  }
+
+  void _addProduct() async {
+    final newItem = await Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => const AddNewProduct()));
+
+    if (newItem == null) {
+      return;
+    }
+
+    setState(() {
+      shoppingList.add(newItem);
+    });
+  }
+
+  void _saveList() {
+    final dataValidation = _form.currentState!.validate();
+
+    if (!dataValidation) {
+      return;
+    }
+
+    if (shoppingList.isEmpty) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(
+        child: Row(
+          children: [
+            Icon(Icons.warning),
+            SizedBox(
+              width: 8,
+            ),
+            Expanded(
+                child: Text('Products list must not be empty',
+                    overflow: TextOverflow.clip))
+          ],
+        ),
+      )));
+      return;
+    }
+
+    _form.currentState!.save();
+
+    if (id == null) {
+      Navigator.of(context).pop(ShoppingList(
+          listName: title!,
+          shoppingList: shoppingList,
+          description: description));
+    } else {
+      Navigator.of(context).pop(ShoppingList.withID(
+          listName: title!,
+          shoppingList: shoppingList,
+          description: description,
+          listID: id!));
+    }
   }
 
   @override
@@ -37,6 +110,7 @@ class _AddNewListState extends State<AddNewList> {
               child: Column(
                 children: [
                   TextFormField(
+                    initialValue: title,
                     maxLength: 50,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
@@ -48,10 +122,11 @@ class _AddNewListState extends State<AddNewList> {
                       return null;
                     },
                     onSaved: (newValue) {
-                      _title = newValue!;
+                      title = newValue!;
                     },
                   ),
                   TextFormField(
+                    initialValue: description,
                     minLines: 2,
                     maxLines: 3,
                     maxLength: 150,
@@ -59,7 +134,7 @@ class _AddNewListState extends State<AddNewList> {
                         color: Theme.of(context).colorScheme.onSurface),
                     decoration: const InputDecoration(labelText: 'Description'),
                     onSaved: (newValue) {
-                      _description = newValue!;
+                      description = newValue!;
                     },
                   ),
                   const SizedBox(
@@ -88,6 +163,7 @@ class _AddNewListState extends State<AddNewList> {
                           Text("Add new product")
                         ],
                       )),
+                  ShoppingListEditView(shopping_list: shoppingList),
                   const SizedBox(
                     height: 15,
                   ),
@@ -101,7 +177,7 @@ class _AddNewListState extends State<AddNewList> {
                       width: 10,
                     ),
                     ElevatedButton(
-                        onPressed: (){}, child: const Text("Save list"))
+                        onPressed: _saveList, child: const Text("Save list"))
                   ]),
                 ],
               ),

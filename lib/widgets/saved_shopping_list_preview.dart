@@ -3,9 +3,10 @@ import 'package:shopcycle/models/shopping_list.dart';
 import 'package:shopcycle/widgets/saved_shopping_list_details.dart';
 
 class SavedShoppingListPreview extends StatelessWidget {
-  const SavedShoppingListPreview({super.key, required this.displayedShoppingList});
+  const SavedShoppingListPreview({super.key, required this.displayedShoppingList, required this.removeList});
 
   final ShoppingList displayedShoppingList;
+  final Function removeList;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class SavedShoppingListPreview extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (ctx) => SavedShoppingListDetalisView(
-                  displayedShoppingList: displayedShoppingList)));
+                  displayedShoppingList: displayedShoppingList, removeList: removeList,)));
         },
         child: Card(
           child: Padding(
