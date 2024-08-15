@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopcycle/models/data_model.dart';
 import 'package:shopcycle/models/products_list_item.dart';
 import 'package:shopcycle/screens/shopping_list_page.dart';
 import 'package:shopcycle/widgets/add_new_product.dart';
@@ -23,15 +22,12 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
   late ShoppingList _currentShoppingList;
   StreamSubscription<DocumentSnapshot>? _current_list_subscription;
+  StreamSubscription<QuerySnapshot>? _saved_lists_subscription;
 
-  final List<ShoppingList> _savedShoppingLists = [
-    savedListModel,
-    savedListModel2
-  ];
+  final List<ShoppingList> _savedShoppingLists = [];
 
   @override
   void initState() {
-    super.initState();
     _current_list_subscription = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -46,14 +42,31 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
             products: (data['products'] as List<dynamic>)
                 .map((productData) => ProductsListItem.fromMap(productData))
                 .toList());
-        print(_currentShoppingList.products);
       }
     });
+
+    _saved_lists_subscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('saved_lists')
+        .snapshots()
+        .listen((snapshot) {
+      final List<ShoppingList> updatedSavedLists = snapshot.docs.map((doc) {
+        return ShoppingList.fromMap(doc.data());
+      }).toList();
+      setState(() {
+        _savedShoppingLists.clear();
+        _savedShoppingLists.addAll(updatedSavedLists);
+      });
+    });
+
+    super.initState();
   }
 
   @override
   void dispose() {
     _current_list_subscription?.cancel();
+    _saved_lists_subscription?.cancel();
     super.dispose();
   }
 

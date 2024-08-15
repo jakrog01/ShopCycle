@@ -43,7 +43,7 @@ class _SavedShoppingListDetalisViewState
       setState(() {
         widget.displayedShoppingList = edited_list;
         FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-        collection('savedLists').doc(widget.displayedShoppingList.listID).set(widget.displayedShoppingList.firestoreData);
+        collection('saved_lists').doc(widget.displayedShoppingList.listID).set(widget.displayedShoppingList.firestoreData);
       });
     }
   }

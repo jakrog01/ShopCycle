@@ -78,6 +78,16 @@ class _AutohrizationScreenState extends State<AuthorizationScreen> {
           "products": []
           }
         );
+
+        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
+        collection('saved_lists').doc(FirebaseAuth.instance.currentUser!.uid).set(
+          {
+          "ID": FirebaseAuth.instance.currentUser!.uid,
+          "list_name": "Example list",
+          "description": "This is your sample list. You can edit it by clicking on it and then entering edit mode.",
+          "products": []
+          }
+        );
         return;
       }
     } on FirebaseAuthException catch (error) {

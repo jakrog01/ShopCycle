@@ -14,6 +14,18 @@ class ShoppingList {
       this.description,
       required this.listID});
 
+  factory ShoppingList.fromMap(Map<String, dynamic> data) {
+    return ShoppingList.withID(
+      listName: data['list_name'] as String,
+      listID: data['ID'] as String,
+      description: data['description'] as String,
+      products: (data['products'] as List<dynamic>)
+          .map((productData) =>
+              ProductsListItem.fromMap(productData as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
   final String listID;
   final String listName;
   final String? description;
@@ -24,9 +36,7 @@ class ShoppingList {
       "ID": listID,
       "list_name": listName,
       "description": description,
-      "products": [
-        for (final product in products) product.newFirestoreData
-      ]
+      "products": [for (final product in products) product.newFirestoreData]
     };
   }
 }

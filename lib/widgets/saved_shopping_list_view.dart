@@ -36,7 +36,7 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
       setState(() {
         widget.savedShoppingList.add(list);
         FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-        collection('savedLists').doc(list.listID).set(list.firestoreData);
+        collection('saved_lists').doc(list.listID).set(list.firestoreData);
       });
     }
   }
@@ -45,7 +45,7 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
     setState(() {
       widget.savedShoppingList.remove(list);
       FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-      collection('savedLists').doc(list.listID).delete();
+      collection('saved_lists').doc(list.listID).delete();
     });
   }
 
