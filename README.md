@@ -3,7 +3,7 @@
 
 ShopCycle is a Flutter application that streamlines the management of recurring shopping lists. The app leverages Firebase for both its authentication system and database, ensuring a seamless and secure user experience.
 
-## Authorization Screen
+## Authentication Screen
 Upon launching the app, users are greeted with the option to log in or sign up. After registration, a verification link is sent to the user's email to confirm their account. Once the account is created (or the user logs in), they are directed to the screen displaying their saved shopping lists.
 
 <p align="center">
