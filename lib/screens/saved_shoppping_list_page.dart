@@ -12,7 +12,7 @@ class SavedShoppingListsPage extends StatefulWidget {
 }
 
 class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
-  late bool pageIsAddPage = widget.savedShoppingList.isEmpty ? true : false;
+  late bool pageIsAddPage;
   int pageIndex = 0;
 
   void onAddPage() {
@@ -35,6 +35,7 @@ class _SavedShoppingListsPageState extends State<SavedShoppingListsPage> {
 
   @override
   Widget build(BuildContext context) {
+    pageIsAddPage = widget.savedShoppingList.isEmpty ? true : false;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
