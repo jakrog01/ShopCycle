@@ -12,6 +12,7 @@ dependencies:
   firebase_core: ^2.24.2
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   link_text: ^0.2.1
   loading_animation_widget: ^1.2.1
   url_launcher: ^6.0.20
