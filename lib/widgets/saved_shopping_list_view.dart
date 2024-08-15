@@ -28,24 +28,69 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
   int itemindex = 0;
 
   void addNewList() async {
-    final list = await Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddNewList()));
-    if (list == null){
+    final list = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AddNewList()));
+    if (list == null) {
       return;
-    }
-    else if (list is ShoppingList){
+    } else if (list is ShoppingList) {
       setState(() {
-        widget.savedShoppingList.add(list);
-        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-        collection('saved_lists').doc(list.listID).set(list.firestoreData);
+        try {
+          widget.savedShoppingList.add(list);
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection('saved_lists')
+              .doc(list.listID)
+              .set(list.firestoreData);
+        } on FirebaseException catch (error) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 2),
+              content: Center(
+                child: Row(
+                  children: [
+                    const Icon(Icons.warning),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                        child: Text(error.message ?? 'Communication problem',
+                            overflow: TextOverflow.clip))
+                  ],
+                ),
+              )));
+        }
       });
     }
   }
 
-  void removeList(ShoppingList list){
+  void removeList(ShoppingList list) {
     setState(() {
+      try{
       widget.savedShoppingList.remove(list);
-      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-      collection('saved_lists').doc(list.listID).delete();
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('saved_lists')
+          .doc(list.listID)
+          .delete();} on FirebaseException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 2),
+            content: Center(
+              child: Row(
+                children: [
+                  const Icon(Icons.warning),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                      child: Text(error.message ?? 'Communication problem',
+                          overflow: TextOverflow.clip))
+                ],
+              ),
+            )));
+      }
     });
   }
 
@@ -58,7 +103,7 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
         child: PageView(
             onPageChanged: (index) {
               setState(() {
-                if (index == widget.savedShoppingList.length) {
+                if (index == widget.savedShoppingList.length || index==0) {
                   widget.onAddPage();
                 } else if (index != widget.savedShoppingList.length &&
                     itemindex == widget.savedShoppingList.length) {
@@ -70,7 +115,9 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
             },
             children: [
               for (final shoppingList in widget.savedShoppingList)
-                SavedShoppingListPreview(displayedShoppingList: shoppingList, removeList: removeList),
+                SavedShoppingListPreview(
+                    displayedShoppingList: shoppingList,
+                    removeList: removeList),
               InkWell(
                 onTap: addNewList,
                 child: Container(
@@ -79,14 +126,16 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, color: Theme.of(context).colorScheme.onSurface),
+                      Icon(Icons.add,
+                          color: Theme.of(context).colorScheme.onSurface),
                       Text("Add new list",
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
                               .copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurfaceVariant)),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant)),
                     ],
                   )),
                 ),

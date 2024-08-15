@@ -33,17 +33,40 @@ class _SavedShoppingListDetalisViewState
   }
 
   void editList() async {
-    var edited_list = await Navigator.of(context).push(MaterialPageRoute(
+    var editedList = await Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) =>
             AddNewList.edit(shoppingList: widget.displayedShoppingList)));
 
-    if (edited_list == null) {
+    if (editedList == null) {
       return;
     } else {
       setState(() {
-        widget.displayedShoppingList = edited_list;
-        FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).
-        collection('saved_lists').doc(widget.displayedShoppingList.listID).set(widget.displayedShoppingList.firestoreData);
+        widget.displayedShoppingList = editedList;
+        try {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection('saved_lists')
+              .doc(widget.displayedShoppingList.listID)
+              .set(widget.displayedShoppingList.firestoreData);
+        } on FirebaseException catch (error) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 2),
+              content: Center(
+                child: Row(
+                  children: [
+                    const Icon(Icons.warning),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(
+                        child: Text(error.message ?? 'Communication problem',
+                            overflow: TextOverflow.clip))
+                  ],
+                ),
+              )));
+        }
       });
     }
   }

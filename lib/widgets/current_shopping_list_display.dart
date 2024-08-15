@@ -28,18 +28,36 @@ class _CurrentShoppingListDisplayState
 
   void _removeItem(ProductsListItem product) {
     setState(() {
-      widget.shoppingList.remove(product);
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('current_list')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "products": [
-          for (final product in  widget.shoppingList)
-            product.firestoreData
-        ]
-      });
+      try {
+        widget.shoppingList.remove(product);
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('current_list')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "products": [
+            for (final product in widget.shoppingList) product.firestoreData
+          ]
+        });
+      } on FirebaseException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 2),
+            content: Center(
+              child: Row(
+                children: [
+                  const Icon(Icons.warning),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                      child: Text(error.message ?? 'Communication problem',
+                          overflow: TextOverflow.clip))
+                ],
+              ),
+            )));
+      }
     });
   }
 
@@ -143,20 +161,46 @@ class _CurrentShoppingListDisplayState
                                   onChanged: (bool? value) {
                                     setState(() {
                                       item.checkState = value!;
-                                      FirebaseFirestore.instance
-                                          .collection('users')
-                                          .doc(FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                          .collection('current_list')
-                                          .doc(FirebaseAuth
-                                              .instance.currentUser!.uid)
-                                          .update({
-                                        "products": [
-                                          for (final product
-                                              in widget.shoppingList)
-                                            product.firestoreData
-                                        ]
-                                      });
+                                      try {
+                                        FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .collection('current_list')
+                                            .doc(FirebaseAuth
+                                                .instance.currentUser!.uid)
+                                            .update({
+                                          "products": [
+                                            for (final product
+                                                in widget.shoppingList)
+                                              product.firestoreData
+                                          ]
+                                        });
+                                      } on FirebaseException catch (error) {
+                                        ScaffoldMessenger.of(context)
+                                            .clearSnackBars();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                                content: Center(
+                                                  child: Row(
+                                                    children: [
+                                                      const Icon(Icons.warning),
+                                                      const SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      Expanded(
+                                                          child: Text(
+                                                              error.message ??
+                                                                  'Communication problem',
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip))
+                                                    ],
+                                                  ),
+                                                )));
+                                      }
                                     });
                                   },
                                   controlAffinity:

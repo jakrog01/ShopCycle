@@ -21,52 +21,71 @@ class ListsTabScreen extends StatefulWidget {
 class _ListsTabScreenState extends State<ListsTabScreen> {
   int _selectedPageIndex = 0;
   late ShoppingList _currentShoppingList;
-  StreamSubscription<DocumentSnapshot>? _current_list_subscription;
-  StreamSubscription<QuerySnapshot>? _saved_lists_subscription;
+  StreamSubscription<DocumentSnapshot>? currentListSubscription;
+  StreamSubscription<QuerySnapshot>? savedListsSubscription;
 
   final List<ShoppingList> _savedShoppingLists = [];
 
   @override
   void initState() {
-    _current_list_subscription = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('current_list')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .snapshots()
-        .listen((event) {
-      final data = event.data();
-      if (data != null && data['products'] != null) {
-        _currentShoppingList = ShoppingList(
-            listName: "current_lsit",
-            products: (data['products'] as List<dynamic>)
-                .map((productData) => ProductsListItem.fromMap(productData))
-                .toList());
-      }
-    });
-
-    _saved_lists_subscription = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('saved_lists')
-        .snapshots()
-        .listen((snapshot) {
-      final List<ShoppingList> updatedSavedLists = snapshot.docs.map((doc) {
-        return ShoppingList.fromMap(doc.data());
-      }).toList();
-      setState(() {
-        _savedShoppingLists.clear();
-        _savedShoppingLists.addAll(updatedSavedLists);
+    try {
+      currentListSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('current_list')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots()
+          .listen((event) {
+        final data = event.data();
+        if (data != null && data['products'] != null) {
+          _currentShoppingList = ShoppingList(
+              listName: "current_lsit",
+              products: (data['products'] as List<dynamic>)
+                  .map((productData) => ProductsListItem.fromMap(productData))
+                  .toList());
+        }
       });
-    });
+
+      savedListsSubscription = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('saved_lists')
+          .snapshots()
+          .listen((snapshot) {
+        final List<ShoppingList> updatedSavedLists = snapshot.docs.map((doc) {
+          return ShoppingList.fromMap(doc.data());
+        }).toList();
+        setState(() {
+          _savedShoppingLists.clear();
+          _savedShoppingLists.addAll(updatedSavedLists);
+        });
+      });
+    } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 2),
+          content: Center(
+            child: Row(
+              children: [
+                const Icon(Icons.warning),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                    child: Text(error.message ?? 'Communication problem',
+                        overflow: TextOverflow.clip))
+              ],
+            ),
+          )));
+    }
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _current_list_subscription?.cancel();
-    _saved_lists_subscription?.cancel();
+    currentListSubscription?.cancel();
+    savedListsSubscription?.cancel();
     super.dispose();
   }
 
@@ -87,18 +106,38 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
           unit: product.unit));
     }
     setState(() {
-      _currentShoppingList.products.addAll(newList);
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .collection('current_list')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        "products": [
-          for (final product in _currentShoppingList.products)
-            product.newFirestoreData
-        ]
-      });
+      try {
+        _currentShoppingList.products.addAll(newList);
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection('current_list')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
+          "products": [
+            for (final product in _currentShoppingList.products)
+              product.newFirestoreData
+          ]
+        });
+      } on FirebaseException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 2),
+            content: Center(
+              child: Row(
+                children: [
+                  const Icon(Icons.warning),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                      child: Text(error.message ?? 'Communication problem',
+                          overflow: TextOverflow.clip))
+                ],
+              ),
+            )));
+      }
+      return;
     });
 
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -162,24 +201,45 @@ class _ListsTabScreenState extends State<ListsTabScreen> {
                   onPressed: () {
                     setState(() {
                       _currentShoppingList.products.clear();
-                      FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
-                          .collection('current_list')
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
-                          .update({
-                        "products": [
-                          for (final product in _currentShoppingList.products)
-                            product.newFirestoreData
-                        ]
-                      });
+                      try {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .collection('current_list')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          "products": [
+                            for (final product in _currentShoppingList.products)
+                              product.newFirestoreData
+                          ]
+                        });
+                      } on FirebaseException catch (error) {
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: const Duration(seconds: 2),
+                            content: Center(
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.warning),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                          error.message ??
+                                              'Communication problem',
+                                          overflow: TextOverflow.clip))
+                                ],
+                              ),
+                            )));
+                      }
                     });
                   },
                   icon: Icon(
                     Icons.clear_all,
                     color: Theme.of(context).colorScheme.onSurface,
                   ))
-              : SizedBox()
+              : const SizedBox()
         ],
         title: Text(screenTitle),
       ),

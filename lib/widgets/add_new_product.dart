@@ -104,7 +104,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                           value: _unit,
                           isDense: true,
                           isExpanded: true,
-                          decoration: InputDecoration(labelText: "Unit"),
+                          decoration: const InputDecoration(labelText: "Unit"),
                           dropdownColor: Theme.of(context).colorScheme.surface,
                           items: ListProductUnits.values
                               .map((ListProductUnits unit) {
