@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData().copyWith(colorScheme: kAppTheme),
-        title: "Shop Cycle",
+        title: "ShopCycle",
         home: StreamBuilder(
             stream: FirebaseAuth.instance.userChanges(),
             builder: (ctx, snapshot) {

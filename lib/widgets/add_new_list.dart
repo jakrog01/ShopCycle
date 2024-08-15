@@ -111,6 +111,7 @@ class _AddNewListState extends State<AddNewList> {
                   TextFormField(
                     initialValue: title,
                     maxLength: 50,
+                    textCapitalization: TextCapitalization.sentences,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                     decoration: const InputDecoration(labelText: 'List name'),
@@ -126,6 +127,7 @@ class _AddNewListState extends State<AddNewList> {
                   ),
                   TextFormField(
                     initialValue: description,
+                    textCapitalization: TextCapitalization.sentences,
                     minLines: 2,
                     maxLines: 3,
                     maxLength: 150,

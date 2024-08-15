@@ -50,6 +50,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                 children: [
                   TextFormField(
                     maxLength: 50,
+                    textCapitalization: TextCapitalization.sentences,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.onSurface),
                     decoration:
