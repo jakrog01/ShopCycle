@@ -103,7 +103,7 @@ class _SavedShoppingListViewState extends State<SavedShoppingListView> {
         child: PageView(
             onPageChanged: (index) {
               setState(() {
-                if (index == widget.savedShoppingList.length || index==0) {
+                if (index == widget.savedShoppingList.length || widget.savedShoppingList.isEmpty) {
                   widget.onAddPage();
                 } else if (index != widget.savedShoppingList.length &&
                     itemindex == widget.savedShoppingList.length) {
